@@ -10,7 +10,9 @@ jobs:
   pre-release:
     name: "Pre Release"
     runs-on: "ubuntu-latest"
-    container: "ocaml/opam:alpine"
+    container: 
+      image: "ocaml/opam:alpine"
+      options: --user 0
 
     steps:
       - uses: "actions/checkout@v3"
@@ -18,7 +20,7 @@ jobs:
       - name: "build"
         run: |
           echo "(-cclib -static)" >bin/link_flags
-          dune build
+          sudo -u opam dune build
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
