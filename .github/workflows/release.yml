@@ -10,11 +10,12 @@ jobs:
   pre-release:
     name: "Pre Release"
     runs-on: "ubuntu-latest"
+    container: "ocaml/opam:alpine"
 
     steps:
       - uses: "actions/checkout@v3"
 
-      - name: "Build & test"
+      - name: "build"
         run: |
           echo "(-cclib -static)" >bin/link_flags
           dune build
