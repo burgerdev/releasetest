@@ -15,11 +15,15 @@ jobs:
       options: --user 0
 
     steps:
+      - name: "build"
+        run: |
+          sudo -u opam install -y dune
+
       - uses: "actions/checkout@v3"
 
       - name: "build"
         run: |
-          echo "(-cclib -static)" >bin/link_flags
+          sudo -u opam echo "(-cclib -static)" >bin/link_flags
           sudo -u opam bash -c 'eval $(opam config env) && dune build'
 
       - uses: "marvinpinto/action-automatic-releases@latest"
