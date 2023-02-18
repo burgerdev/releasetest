@@ -1,0 +1,3 @@
+(executable
+ (name main)
+ (link_flags (:include link_flags)))
