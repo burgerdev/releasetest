@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: "fetch dependencies"
         run: |
-          sudo -u opam install -y dune
+          sudo -u opam opam install -y dune
 
       - uses: "actions/checkout@v3"
 
