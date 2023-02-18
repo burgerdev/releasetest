@@ -20,7 +20,7 @@ jobs:
       - name: "build"
         run: |
           echo "(-cclib -static)" >bin/link_flags
-          sudo -u opam dune build
+          sudo -u opam bash -c 'eval $(opam config env) && dune build'
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
