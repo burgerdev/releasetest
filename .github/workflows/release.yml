@@ -23,6 +23,7 @@ jobs:
 
       - name: "build"
         run: |
+          chown -R opam .
           sudo -u opam echo "(-cclib -static)" >bin/link_flags
           sudo -u opam bash -c 'eval $(opam config env) && dune build'
 
