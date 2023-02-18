@@ -13,6 +13,8 @@ jobs:
     container: 
       image: "ocaml/opam:alpine"
       options: --user 0
+    permissions:
+      contents: write
 
     steps:
       - name: "fetch dependencies"
@@ -27,6 +29,10 @@ jobs:
           sudo -u opam echo "(-cclib -static)" >bin/link_flags
           sudo -u opam bash -c 'eval $(opam config env) && dune build'
 
+      - uses: "actions/upload-artifact@v3"
+        with:
+          name: binary
+          path: _build/default/bin/main.exe
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
