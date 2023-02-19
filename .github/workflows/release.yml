@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - "main"
-    tags:
-      - "v*"
 
 jobs:
   build:
@@ -55,23 +53,4 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
-          files: "*"
-  release:
-    name: "Release"
-    needs: "build"
-    if: github.ref_type == 'tag'
-    runs-on: "ubuntu-latest"
-    # TODO: giving that action `write` on the repo is a bit dodgy!
-    permissions:
-      contents: "write"
-
-    steps:
-      - uses: "actions/download-artifact@v3"
-        with:
-          name: "binary"
-        # TODO: below release step uses deprecated API `set-output`
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
           files: "*"
