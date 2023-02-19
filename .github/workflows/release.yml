@@ -30,7 +30,7 @@ jobs:
       - uses: "actions/upload-artifact@v3"
         with:
           name: "binary"
-          path: "_build/default/bin/main.exe"
+          path: "_build/default/bin/${{github.workflow}}-*"
   pre-release:
     name: "Pre Release"
     needs: "build"
