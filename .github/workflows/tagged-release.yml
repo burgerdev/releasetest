@@ -1,9 +1,7 @@
-name: "releasetest"
+name: "tagged-release"
 
 on:
   push:
-    branches:
-      - "main"
     tags:
       - "v*"
 
@@ -27,39 +25,15 @@ jobs:
           chown -R opam .
           sudo -u opam echo "(-cclib -static)" >bin/link_flags
           sudo -u opam bash -c 'eval $(opam config env) && dune build'
-          cp _build/default/bin/main.exe _build/default/bin/${{github.workflow}}-${{runner.arch}}
+          cp _build/default/bin/main.exe _build/default/bin/hello-world-${{runner.arch}}
 
       - uses: "actions/upload-artifact@v3"
         with:
           name: "binary"
-          path: "_build/default/bin/${{github.workflow}}-*"
-  pre-release:
-    name: "Pre Release"
-    needs: "build"
-    runs-on: "ubuntu-latest"
-    # TODO: giving that action `write` on the repo is a bit dodgy!
-    permissions:
-      contents: "write"
-
-    steps:
-      - uses: "actions/download-artifact@v3"
-        with:
-          name: "binary"
-        # TODO: below release step uses deprecated API `set-output`
-      - name: "debug"
-        run: |
-          find .
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: "*"
+          path: "_build/default/bin/*-${{runner.arch}}"
   release:
     name: "Release"
     needs: "build"
-    if: github.ref_type == 'tag'
     runs-on: "ubuntu-latest"
     # TODO: giving that action `write` on the repo is a bit dodgy!
     permissions:
