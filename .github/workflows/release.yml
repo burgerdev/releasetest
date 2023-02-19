@@ -1,4 +1,4 @@
-name: "release"
+name: "releasetest"
 
 on:
   push:
@@ -25,6 +25,7 @@ jobs:
           chown -R opam .
           sudo -u opam echo "(-cclib -static)" >bin/link_flags
           sudo -u opam bash -c 'eval $(opam config env) && dune build'
+          cp _build/default/bin/main.exe _build/default/bin/${{github.workflow}}-${{runner.arch}}
 
       - uses: "actions/upload-artifact@v3"
         with:
@@ -52,7 +53,7 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
-          files: "binary/*"
+          files: "*"
   release:
     name: "Release"
     needs: "build"
