@@ -1,5 +1,4 @@
----
-name: "pre-release"
+name: "release"
 
 on:
   push:
@@ -7,8 +6,8 @@ on:
       - "main"
 
 jobs:
-  pre-release:
-    name: "Pre Release"
+  build:
+    name: "Build"
     runs-on: "ubuntu-latest"
     container: 
       image: "ocaml/opam:alpine"
@@ -33,10 +32,22 @@ jobs:
         with:
           name: binary
           path: _build/default/bin/main.exe
+  pre-release:
+    name: "Pre Release"
+    runs-on: "ubuntu-latest"
+    # TODO: giving that action `write` on the repo is a bit dodgy!
+    permissions:
+      contents: write
+
+    steps:
+      - uses: "actions/download-artifact@v3"
+        with:
+          name: binary
+        # TODO: below release step uses deprecated API `set-output`
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
-          files: _build/default/bin/main.exe
+          files: binary/*
