@@ -35,7 +35,6 @@ jobs:
     name: "Pre Release"
     needs: "build"
     runs-on: "ubuntu-latest"
-    # TODO: giving that action `write` on the repo is a bit dodgy!
     permissions:
       contents: "write"
 
@@ -43,14 +42,11 @@ jobs:
       - uses: "actions/download-artifact@v3"
         with:
           name: "binary"
-        # TODO: below release step uses deprecated API `set-output`
-      - name: "debug"
+      - name: "release"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          find .
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: "*"
+          # delete stuff first
+          gh release delete nightly --cleanup-tag -y || true
+          # prelease; * includes all artifacts into the release
+          gh release create nightly -p -t Nightly -n "Automatic build from head of main" *
