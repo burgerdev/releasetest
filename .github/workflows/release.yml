@@ -39,9 +39,11 @@ jobs:
       contents: "write"
 
     steps:
+      - uses: "actions/checkout@v3"
       - uses: "actions/download-artifact@v3"
         with:
           name: "binary"
+          path: "_release"
       - name: "release"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -49,4 +51,4 @@ jobs:
           # delete stuff first
           gh release delete nightly --cleanup-tag -y || true
           # prelease; * includes all artifacts into the release
-          gh release create nightly -p -t Nightly -n "Automatic build from head of main" *
+          gh release create nightly -p -t Nightly -n "Automatic build from head of main" _release/*
